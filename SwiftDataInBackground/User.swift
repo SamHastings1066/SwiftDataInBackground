@@ -9,9 +9,9 @@ import Foundation
 import SwiftData
 
 @Model
-class MyModel {
-    var id: UUID
-    var name: String
+final class User: Sendable, Identifiable {
+    let id: UUID
+    let name: String
     
     init(id: UUID = UUID(), name: String) {
         self.id = id
