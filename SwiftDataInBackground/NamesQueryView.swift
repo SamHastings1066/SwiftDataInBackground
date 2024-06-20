@@ -42,7 +42,7 @@ final class NamesQueryViewViewModel: Sendable { // N.B. must be Sendable to let 
             return
         }
         var newUsers = [User]()
-        for i in 0..<50000 { // Create a LOT of model objects
+        for i in 0..<10000 { // Create a LOT of model objects
             newUsers.append(User(name: "User \(i)"))
         }
         await backgroundActor.persist(newUsers)
@@ -53,6 +53,7 @@ final class NamesQueryViewViewModel: Sendable { // N.B. must be Sendable to let 
 struct NamesQueryView: View {
     let modelContainer: ModelContainer
     @State var isCreatingDatabase = true
+    @State var isFetchingUsers = false
     @State private var models: [User] = []
     var viewModel: NamesQueryViewViewModel
     
@@ -68,8 +69,10 @@ struct NamesQueryView: View {
         } else {
             //VStack {
             Button("Background retrieval") {
+                isFetchingUsers = true
                 Task(priority: .background) {
                     models = try await viewModel.backgroundFetch()
+                    isFetchingUsers = false
                 }
             }
             .buttonStyle(.bordered)
@@ -80,9 +83,14 @@ struct NamesQueryView: View {
             }
             .buttonStyle(.bordered)
             
-            
-            List(models) { model in
-                Text(model.name)
+            if isFetchingUsers {
+                List {
+                    Text("Fetching users...")
+                }
+            } else {
+                List(models) { model in
+                    Text(model.name)
+                }
             }
             
             //}
