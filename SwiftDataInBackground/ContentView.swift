@@ -14,11 +14,11 @@ struct ContentView: View {
     @Query private var models2: [User]
     
     @State private var models: [User] = []
-    //private var backgroundActor: BackgroundSerialPersistenceActor
+    //private var backgroundActor: ThreadsafeBackgroundDatabaseActor
 
     init(modelContainer: ModelContainer) {
         self.modelContainer = modelContainer
-        //self.backgroundActor = BackgroundSerialPersistenceActor(container: modelContainer)
+        //self.backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer)
     }
     
     var body: some View {
@@ -78,7 +78,7 @@ struct ContentView: View {
     
     private func backgroundSerialFetch() {
         Task(priority: .background) {
-            let backgroundActor = BackgroundSerialPersistenceActor(container: modelContainer)
+            let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer)
             do {
                 let batchSize = 1000
                 let totalCount = 10000
@@ -96,7 +96,7 @@ struct ContentView: View {
     private func backgroundBatchFetch() async throws -> [User] {
         // Batch size and total count
         let batchSize = 1000
-        let backgroundActor = BackgroundSerialPersistenceActor(container: modelContainer)
+        let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer)
         let totalCount = 10000
         
         let start = Date()
@@ -120,7 +120,7 @@ struct ContentView: View {
     }
     
     private func backgroundFetch() async throws -> [User] {
-                let backgroundActor = BackgroundSerialPersistenceActor(container: modelContainer)
+                let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer)
                 let start = Date()
                 let result = try await backgroundActor.fetchData() as [User]
                 print("Background fetch takes \(Date().timeIntervalSince(start))")

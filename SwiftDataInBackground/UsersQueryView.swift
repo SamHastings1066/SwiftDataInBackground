@@ -1,5 +1,5 @@
 //
-//  NamesQueryView.swift
+//  UsersQueryView.swift
 //  SwiftDataInBackground
 //
 //  Created by sam hastings on 19/06/2024.
@@ -18,7 +18,7 @@ import SwiftUI
 import SwiftData
 
 @Observable
-final class NamesQueryViewViewModel: Sendable { // N.B. must be Sendable to let the Swift compiler know that it is safe to share the view model across model contexts.
+final class UsersQueryViewViewModel: Sendable { // Must be Sendable to let the Swift compiler know that it is safe to share the view model across model contexts.
     
     
     let modelContainer: ModelContainer
@@ -28,7 +28,7 @@ final class NamesQueryViewViewModel: Sendable { // N.B. must be Sendable to let 
     }
     
     func backgroundFetch() async throws -> [User] {
-        let backgroundActor = BackgroundSerialPersistenceActor(container: modelContainer) // N.B. backgroundActor must be created within an async context off the main actor, or else its associated model context will be on the main actor and any work done will be done on the main thread
+        let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer) // backgroundActor must be created within an async context off the main actor, or else its associated model context will be on the main actor and any work done will be done on the main thread
         let start = Date()
         let result = try await backgroundActor.fetchData() as [User]
         print("Background fetch takes \(Date().timeIntervalSince(start))")
@@ -36,7 +36,7 @@ final class NamesQueryViewViewModel: Sendable { // N.B. must be Sendable to let 
     }
     
     func createDatabase() async {
-        let backgroundActor = BackgroundSerialPersistenceActor(container: modelContainer)
+        let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer)
         let existingUsersCount = await backgroundActor.fetchCount()
         guard existingUsersCount == 0 else {
             return
@@ -50,17 +50,17 @@ final class NamesQueryViewViewModel: Sendable { // N.B. must be Sendable to let 
     
 }
 
-struct NamesQueryView: View {
+struct UsersQueryView: View {
     let modelContainer: ModelContainer
     @State var isCreatingDatabase = true
     @State var isFetchingUsers = false
     @State private var users: [User] = []
-    var viewModel: NamesQueryViewViewModel
+    var viewModel: UsersQueryViewViewModel
     
     
     init(modelContainer: ModelContainer) {
         self.modelContainer = modelContainer
-        viewModel = NamesQueryViewViewModel(modelContainer: modelContainer)
+        viewModel = UsersQueryViewViewModel(modelContainer: modelContainer)
     }
     
     var body: some View {
@@ -78,7 +78,7 @@ struct NamesQueryView: View {
                 .buttonStyle(.bordered)
                 
                 
-                Button("Tapped") {
+                Button("Print \"tapped\" to console") {
                     print("tapped")
                 }
                 .buttonStyle(.bordered)
@@ -101,7 +101,6 @@ struct NamesQueryView: View {
         .task(priority: .background) {
             await viewModel.createDatabase()
             isCreatingDatabase = false
-            print(isCreatingDatabase)
         }
     }
 }
@@ -110,9 +109,9 @@ struct NamesQueryView: View {
     do {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: User.self, configurations: config)
-        return NamesQueryView(modelContainer: container)
+        return UsersQueryView(modelContainer: container)
     } catch {
-        fatalError("Failed to pre-seed database")
+        fatalError("Failed to create container")
     }
     
 }

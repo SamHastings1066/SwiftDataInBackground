@@ -1,5 +1,5 @@
 //
-//  BackgroundSerialPersistenceActor.swift
+//  ThreadsafeBackgroundDatabaseActor.swift
 //  SwiftDataInBackground
 //
 //  Created by sam hastings on 12/06/2024.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @available(iOS 17, *)
-actor BackgroundSerialPersistenceActor: ModelActor, Sendable {
+actor ThreadsafeBackgroundDatabaseActor: ModelActor, Sendable {
     
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
