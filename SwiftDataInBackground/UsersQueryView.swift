@@ -28,7 +28,7 @@ final class UsersQueryViewViewModel: Sendable { // Must be Sendable to let the S
     }
     
     func backgroundFetch() async throws -> [User] {
-        let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer) // backgroundActor must be created within an async context off the main actor, or else its associated model context will be on the main actor and any work done will be done on the main thread
+        let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer) // backgroundActor must be created within an async context off the main actor, or else its associated model context will be on the main actor and any work done will be done on the main thread.
         let start = Date()
         let result = try await backgroundActor.fetchData() as [User]
         print("Background fetch takes \(Date().timeIntervalSince(start))")
@@ -42,7 +42,7 @@ final class UsersQueryViewViewModel: Sendable { // Must be Sendable to let the S
             return
         }
         var newUsers = [User]()
-        for i in 0..<10000 { // Create a LOT of model objects
+        for i in 0..<50000 { // Creates a lot of model objects!
             newUsers.append(User(name: "User \(i)"))
         }
         await backgroundActor.persist(newUsers)
@@ -77,9 +77,13 @@ struct UsersQueryView: View {
                 }
                 .buttonStyle(.bordered)
                 
+                Button("Main thread retrieval") {
+                    users = mainThreadFetch()
+                }
+                .buttonStyle(.bordered)
                 
-                Button("Print \"tapped\" to console") {
-                    print("tapped")
+                Button("Check UI responsive") {
+                    print("Responsive!")
                 }
                 .buttonStyle(.bordered)
                 
@@ -103,6 +107,20 @@ struct UsersQueryView: View {
             isCreatingDatabase = false
         }
     }
+    
+    private func mainThreadFetch() -> [User] {
+        let context = ModelContext(modelContainer)
+        do {
+            let start = Date()
+            let result = try context.fetch(FetchDescriptor<User>())
+            print("Main thread fetch takes \(Date().timeIntervalSince(start))")
+            return result
+        } catch {
+            print(error)
+            return []
+        }
+    }
+    
 }
 
 #Preview {

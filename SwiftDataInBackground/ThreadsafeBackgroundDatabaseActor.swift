@@ -24,6 +24,7 @@ actor ThreadsafeBackgroundDatabaseActor: ModelActor, Sendable {
     func persist(_ models: [User]) {
         models.forEach{ context.insert($0) }
         try? context.save()
+        print("Data persisted")
     }
     
     func fetchData<T: PersistentModel>(
@@ -41,17 +42,17 @@ actor ThreadsafeBackgroundDatabaseActor: ModelActor, Sendable {
         return existingModelsCount ?? 0
     }
     
-    func fetchBatch<T: PersistentModel>(
-        predicate: Predicate<T>? = nil,
-        sortBy: [SortDescriptor<T>] = [],
-        limit: Int,
-        offset: Int
-    ) async throws -> [T] {
-        var fetchDescriptor = FetchDescriptor<T>(predicate: predicate, sortBy: sortBy)
-        fetchDescriptor.fetchLimit = limit
-        fetchDescriptor.fetchOffset = offset
-        let list: [T] = try context.fetch(fetchDescriptor)
-        return list
-    }
+//    func fetchBatch<T: PersistentModel>(
+//        predicate: Predicate<T>? = nil,
+//        sortBy: [SortDescriptor<T>] = [],
+//        limit: Int,
+//        offset: Int
+//    ) async throws -> [T] {
+//        var fetchDescriptor = FetchDescriptor<T>(predicate: predicate, sortBy: sortBy)
+//        fetchDescriptor.fetchLimit = limit
+//        fetchDescriptor.fetchOffset = offset
+//        let list: [T] = try context.fetch(fetchDescriptor)
+//        return list
+//    }
 }
 
