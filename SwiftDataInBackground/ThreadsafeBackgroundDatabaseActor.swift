@@ -9,16 +9,18 @@ import Foundation
 import SwiftData
 
 @available(iOS 17, *)
+//@ModelActor
 actor ThreadsafeBackgroundDatabaseActor: ModelActor, Sendable {
     
-    let modelContainer: ModelContainer
-    let modelExecutor: any ModelExecutor
+    let modelContainer: ModelContainer // Provided automatically when actor annotated with @ModelActor
+    let modelExecutor: any ModelExecutor // Provided automatically when actor annotated with @ModelActor
     private var context: ModelContext { modelExecutor.modelContext }
     
-    init(container: ModelContainer) {
-        self.modelContainer = container
-        let context = ModelContext(modelContainer)
-        modelExecutor = DefaultSerialModelExecutor(modelContext: context)
+    // The initiliazer is provided automatically when actor annotated with @ModelActor
+    init(modelContainer: ModelContainer) {
+        let modelContext = ModelContext(modelContainer)
+        self.modelExecutor = DefaultSerialModelExecutor(modelContext: modelContext)
+        self.modelContainer = modelContainer
     }
     
     func persist(_ models: [User]) {
@@ -42,17 +44,5 @@ actor ThreadsafeBackgroundDatabaseActor: ModelActor, Sendable {
         return existingModelsCount ?? 0
     }
     
-//    func fetchBatch<T: PersistentModel>(
-//        predicate: Predicate<T>? = nil,
-//        sortBy: [SortDescriptor<T>] = [],
-//        limit: Int,
-//        offset: Int
-//    ) async throws -> [T] {
-//        var fetchDescriptor = FetchDescriptor<T>(predicate: predicate, sortBy: sortBy)
-//        fetchDescriptor.fetchLimit = limit
-//        fetchDescriptor.fetchOffset = offset
-//        let list: [T] = try context.fetch(fetchDescriptor)
-//        return list
-//    }
 }
 

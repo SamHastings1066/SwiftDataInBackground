@@ -28,7 +28,7 @@ final class UsersQueryViewViewModel: Sendable { // Must be Sendable to let the S
     }
     
     func backgroundFetch() async throws -> [User] {
-        let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer) // backgroundActor must be created within an async context off the main actor, or else its associated model context will be on the main actor and any work done will be done on the main thread.
+        let backgroundActor = ThreadsafeBackgroundDatabaseActor(modelContainer: modelContainer) // backgroundActor must be created within an async context off the main actor, or else its associated model context will be on the main actor and any work done will be done on the main thread.
         let start = Date()
         let sortDescriptor = [SortDescriptor(\User.name)]
         let result = try await backgroundActor.fetchData(sortBy: sortDescriptor)
@@ -37,7 +37,7 @@ final class UsersQueryViewViewModel: Sendable { // Must be Sendable to let the S
     }
     
     func createDatabase() async {
-        let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer)
+        let backgroundActor = ThreadsafeBackgroundDatabaseActor(modelContainer: modelContainer)
         let existingUsersCount = await backgroundActor.fetchCount()
         guard existingUsersCount == 0 else {
             print("User models already exists")
