@@ -30,7 +30,8 @@ final class UsersQueryViewViewModel: Sendable { // Must be Sendable to let the S
     func backgroundFetch() async throws -> [User] {
         let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer) // backgroundActor must be created within an async context off the main actor, or else its associated model context will be on the main actor and any work done will be done on the main thread.
         let start = Date()
-        let result = try await backgroundActor.fetchData() as [User]
+        let sortDescriptor = [SortDescriptor(\User.name)]
+        let result = try await backgroundActor.fetchData(sortBy: sortDescriptor)
         print("Background fetch takes \(Date().timeIntervalSince(start))")
         return result
     }
@@ -39,10 +40,11 @@ final class UsersQueryViewViewModel: Sendable { // Must be Sendable to let the S
         let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer)
         let existingUsersCount = await backgroundActor.fetchCount()
         guard existingUsersCount == 0 else {
+            print("User models already exists")
             return
         }
         var newUsers = [User]()
-        for i in 0..<50000 { // Creates a lot of model objects!
+        for i in 0..<10000 { // Creates a lot of model objects!
             newUsers.append(User(name: "User \(i)"))
         }
         await backgroundActor.persist(newUsers)
@@ -112,7 +114,7 @@ struct UsersQueryView: View {
         let context = ModelContext(modelContainer)
         do {
             let start = Date()
-            let result = try context.fetch(FetchDescriptor<User>())
+            let result = try context.fetch(FetchDescriptor<User>(sortBy: [SortDescriptor(\User.name)]))
             print("Main thread fetch takes \(Date().timeIntervalSince(start))")
             return result
         } catch {

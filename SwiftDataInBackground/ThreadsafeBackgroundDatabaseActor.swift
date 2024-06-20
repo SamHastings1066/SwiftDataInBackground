@@ -27,12 +27,12 @@ actor ThreadsafeBackgroundDatabaseActor: ModelActor, Sendable {
         print("Data persisted")
     }
     
-    func fetchData<T: PersistentModel>(
-        predicate: Predicate<T>? = nil,
-        sortBy: [SortDescriptor<T>] = []
-    ) async throws -> [T] {
-        let fetchDescriptor = FetchDescriptor<T>(predicate: predicate, sortBy: sortBy)
-        let list: [T] = try context.fetch(fetchDescriptor)
+    func fetchData(
+        predicate: Predicate<User>? = nil,
+        sortBy: [SortDescriptor<User>] = []
+    ) async throws -> [User] {
+        let fetchDescriptor = FetchDescriptor<User>(predicate: predicate, sortBy: sortBy)
+        let list: [User] = try context.fetch(fetchDescriptor)
         return list
     }
     
