@@ -9,19 +9,19 @@ import Foundation
 import SwiftData
 
 @available(iOS 17, *)
-//@ModelActor
-actor ThreadsafeBackgroundDatabaseActor: ModelActor, Sendable {
+@ModelActor
+actor ThreadsafeBackgroundDatabaseActor: Sendable { //ModelActor, Sendable {
     
-    let modelContainer: ModelContainer // Provided automatically when actor annotated with @ModelActor
-    let modelExecutor: any ModelExecutor // Provided automatically when actor annotated with @ModelActor
+    //let modelContainer: ModelContainer // Provided automatically when actor annotated with @ModelActor
+    //let modelExecutor: any ModelExecutor // Provided automatically when actor annotated with @ModelActor
     private var context: ModelContext { modelExecutor.modelContext }
     
     // The initiliazer is provided automatically when actor annotated with @ModelActor
-    init(modelContainer: ModelContainer) {
-        let modelContext = ModelContext(modelContainer)
-        self.modelExecutor = DefaultSerialModelExecutor(modelContext: modelContext)
-        self.modelContainer = modelContainer
-    }
+//    init(modelContainer: ModelContainer) {
+//        let modelContext = ModelContext(modelContainer)
+//        self.modelExecutor = DefaultSerialModelExecutor(modelContext: modelContext)
+//        self.modelContainer = modelContainer
+//    }
     
     func persist(_ models: [User]) {
         models.forEach{ context.insert($0) }

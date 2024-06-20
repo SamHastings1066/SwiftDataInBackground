@@ -18,7 +18,7 @@ import SwiftUI
 import SwiftData
 
 @Observable
-final class UsersQueryViewViewModel: Sendable { // Must be Sendable to let the Swift compiler know that it is safe to share the view model across model contexts.
+final class UsersQueryViewViewModel: Sendable { // Must be Sendable to let the Swift compiler know that it is safe to share the view model across contexts.
     
     
     let modelContainer: ModelContainer
