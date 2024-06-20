@@ -54,7 +54,7 @@ struct NamesQueryView: View {
     let modelContainer: ModelContainer
     @State var isCreatingDatabase = true
     @State var isFetchingUsers = false
-    @State private var models: [User] = []
+    @State private var users: [User] = []
     var viewModel: NamesQueryViewViewModel
     
     
@@ -64,48 +64,46 @@ struct NamesQueryView: View {
     }
     
     var body: some View {
-        VStack { if isCreatingDatabase {
-            ProgressView("Creating database")
-        } else {
-            //VStack {
-            Button("Background retrieval") {
-                isFetchingUsers = true
-                Task(priority: .background) {
-                    models = try await viewModel.backgroundFetch()
-                    isFetchingUsers = false
-                }
-            }
-            .buttonStyle(.bordered)
-            
-            
-            Button("Tapped") {
-                print("tapped")
-            }
-            .buttonStyle(.bordered)
-            
-            if isFetchingUsers {
-                List {
-                    Text("Fetching users...")
-                }
+        VStack {
+            if isCreatingDatabase {
+                ProgressView("Creating database")
             } else {
-                List(models) { model in
-                    Text(model.name)
+                Button("Background retrieval") {
+                    isFetchingUsers = true
+                    Task(priority: .background) {
+                        users = try await viewModel.backgroundFetch()
+                        isFetchingUsers = false
+                    }
+                }
+                .buttonStyle(.bordered)
+                
+                
+                Button("Tapped") {
+                    print("tapped")
+                }
+                .buttonStyle(.bordered)
+                
+                if isFetchingUsers {
+                    List {
+                        Text("Fetching users...")
+                    }
+                } else {
+                    if users.count == 0 {
+                        ContentUnavailableView("No Users fetched", systemImage: "person.crop.circle.badge.exclamationmark")
+                    } else {
+                        List(users) { model in
+                            Text(model.name)
+                        }
+                    }
                 }
             }
-            
-            //}
-        }
         }
         .task(priority: .background) {
             await viewModel.createDatabase()
             isCreatingDatabase = false
             print(isCreatingDatabase)
-            
-            
         }
     }
-    
-    
 }
 
 #Preview {

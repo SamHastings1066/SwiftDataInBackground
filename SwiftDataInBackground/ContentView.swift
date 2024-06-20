@@ -70,7 +70,7 @@ struct ContentView: View {
                 Text(model.name)
             }
             
-//            List(models) { model in
+//            List(users) { model in
 //                Text(model.name)
 //            }
         }
