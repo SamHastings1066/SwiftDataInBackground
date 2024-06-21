@@ -1,5 +1,5 @@
 //
-//  ThreadsafeBackgroundDatabaseActor.swift
+//  ThreadsafeBackgroundActor.swift
 //  SwiftDataInBackground
 //
 //  Created by sam hastings on 12/06/2024.
@@ -10,7 +10,7 @@ import SwiftData
 
 @available(iOS 17, *)
 @ModelActor
-actor ThreadsafeBackgroundDatabaseActor: Sendable { //ModelActor, Sendable {
+actor ThreadsafeBackgroundActor: Sendable { //ModelActor, Sendable {
     
     //let modelContainer: ModelContainer // Provided automatically when actor annotated with @ModelActor
     //let modelExecutor: any ModelExecutor // Provided automatically when actor annotated with @ModelActor

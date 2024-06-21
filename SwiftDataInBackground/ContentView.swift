@@ -14,7 +14,7 @@
 //    @Query private var models2: [User]
 //    
 //    @State private var models: [User] = []
-//    //private var backgroundActor: ThreadsafeBackgroundDatabaseActor
+//    //private var backgroundActor: ThreadsafeBackgroundActor
 //
 //    init(modelContainer: ModelContainer) {
 //        self.modelContainer = modelContainer

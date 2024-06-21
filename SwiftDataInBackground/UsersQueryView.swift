@@ -18,7 +18,7 @@ import SwiftUI
 import SwiftData
 
 @Observable
-final class UsersQueryViewViewModel: Sendable { // Must be Sendable to let the Swift compiler know that it is safe to share the view model across contexts.
+final class UsersQueryViewModel: Sendable { // Must be Sendable to let the Swift compiler know that it is safe to share the view model across contexts.
     
     
     let modelContainer: ModelContainer
@@ -28,7 +28,7 @@ final class UsersQueryViewViewModel: Sendable { // Must be Sendable to let the S
     }
     
     func backgroundFetch() async throws -> [User] {
-        let backgroundActor = ThreadsafeBackgroundDatabaseActor(modelContainer: modelContainer) // backgroundActor must be created within an async context off the main actor, or else its associated model context will be on the main actor and any work done will be done on the main thread.
+        let backgroundActor = ThreadsafeBackgroundActor(modelContainer: modelContainer) // backgroundActor must be created within an async context off the main actor, or else its associated model context will be on the main actor and any work done will be done on the main thread.
         let start = Date()
         let sortDescriptor = [SortDescriptor(\User.name)]
         let result = try await backgroundActor.fetchData(sortBy: sortDescriptor)
@@ -37,7 +37,7 @@ final class UsersQueryViewViewModel: Sendable { // Must be Sendable to let the S
     }
     
     func createDatabase() async {
-        let backgroundActor = ThreadsafeBackgroundDatabaseActor(modelContainer: modelContainer)
+        let backgroundActor = ThreadsafeBackgroundActor(modelContainer: modelContainer)
         let existingUsersCount = await backgroundActor.fetchCount()
         guard existingUsersCount == 0 else {
             print("User models already exists")
@@ -57,12 +57,12 @@ struct UsersQueryView: View {
     @State var isCreatingDatabase = true
     @State var isFetchingUsers = false
     @State private var users: [User] = []
-    var viewModel: UsersQueryViewViewModel
+    var viewModel: UsersQueryViewModel
     
     
     init(modelContainer: ModelContainer) {
         self.modelContainer = modelContainer
-        viewModel = UsersQueryViewViewModel(modelContainer: modelContainer)
+        viewModel = UsersQueryViewModel(modelContainer: modelContainer)
     }
     
     var body: some View {
