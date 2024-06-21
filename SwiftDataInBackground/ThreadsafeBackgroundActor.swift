@@ -29,13 +29,24 @@ actor ThreadsafeBackgroundActor: Sendable { //ModelActor, Sendable {
         print("Data persisted")
     }
     
+    func persistUsers(_ numUsers: Int) {
+        var newUsers = [User]()
+        for i in 0..<numUsers { // Creates a lot of model objects!
+            newUsers.append(User(name: "User \(i)"))
+        }
+        newUsers.forEach{ context.insert($0) }
+        try? context.save()
+        print("Data persisted")
+    }
+    
     func fetchData(
         predicate: Predicate<User>? = nil,
         sortBy: [SortDescriptor<User>] = []
-    ) async throws -> [User] {
+    ) async throws -> [UsersViewModel] {
         let fetchDescriptor = FetchDescriptor<User>(predicate: predicate, sortBy: sortBy)
-        let list: [User] = try context.fetch(fetchDescriptor)
-        return list
+        let users: [User] = try context.fetch(fetchDescriptor)
+        let userViewModels = users.map{UsersViewModel(id: $0.id, name: $0.name)}
+        return userViewModels
     }
     
     func fetchCount() async -> Int {

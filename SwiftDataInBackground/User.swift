@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class User: Sendable, Identifiable {
+class User: Identifiable {
     let id: UUID
     let name: String
     
@@ -19,3 +19,12 @@ final class User: Sendable, Identifiable {
     }
 }
 
+final class UsersViewModel: Sendable, Identifiable {
+    let id: UUID
+    let name: String
+    
+    init(id: UUID, name: String) {
+        self.id = id
+        self.name = name
+    }
+}

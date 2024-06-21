@@ -27,7 +27,7 @@ final class UsersQueryViewModel: Sendable { // Must be Sendable to let the Swift
         self.modelContainer = modelContainer
     }
     
-    func backgroundFetch() async throws -> [User] {
+    func backgroundFetch() async throws -> [UsersViewModel] {
         let backgroundActor = ThreadsafeBackgroundActor(modelContainer: modelContainer) // backgroundActor must be created within an async context off the main actor, or else its associated model context will be on the main actor and any work done will be done on the main thread.
         let start = Date()
         let sortDescriptor = [SortDescriptor(\User.name)]
@@ -43,11 +43,7 @@ final class UsersQueryViewModel: Sendable { // Must be Sendable to let the Swift
             print("User models already exists")
             return
         }
-        var newUsers = [User]()
-        for i in 0..<10000 { // Creates a lot of model objects!
-            newUsers.append(User(name: "User \(i)"))
-        }
-        await backgroundActor.persist(newUsers)
+        await backgroundActor.persistUsers(50000)
     }
     
 }
@@ -56,7 +52,7 @@ struct UsersQueryView: View {
     let modelContainer: ModelContainer
     @State var isCreatingDatabase = true
     @State var isFetchingUsers = false
-    @State private var users: [User] = []
+    @State private var users: [UsersViewModel] = []
     var viewModel: UsersQueryViewModel
     
     
@@ -110,13 +106,13 @@ struct UsersQueryView: View {
         }
     }
     
-    private func mainThreadFetch() -> [User] {
+    private func mainThreadFetch() -> [UsersViewModel] {
         let context = ModelContext(modelContainer)
         do {
             let start = Date()
             let result = try context.fetch(FetchDescriptor<User>(sortBy: [SortDescriptor(\User.name)]))
             print("Main thread fetch takes \(Date().timeIntervalSince(start))")
-            return result
+            return result.map{UsersViewModel(id: $0.id, name: $0.name)}
         } catch {
             print(error)
             return []
