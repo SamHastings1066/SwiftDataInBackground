@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class User: Identifiable {
+class User {
     let id: UUID
     let name: String
     
@@ -19,7 +19,8 @@ class User: Identifiable {
     }
 }
 
-final class UsersViewModel: Sendable, Identifiable {
+/// Creates User Data Transfer Objects
+final class UsersDTO: Sendable, Identifiable {
     let id: UUID
     let name: String
     

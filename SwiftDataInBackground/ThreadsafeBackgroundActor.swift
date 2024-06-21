@@ -12,22 +12,7 @@ import SwiftData
 @ModelActor
 actor ThreadsafeBackgroundActor: Sendable { //ModelActor, Sendable {
     
-    //let modelContainer: ModelContainer // Provided automatically when actor annotated with @ModelActor
-    //let modelExecutor: any ModelExecutor // Provided automatically when actor annotated with @ModelActor
     private var context: ModelContext { modelExecutor.modelContext }
-    
-    // The initiliazer is provided automatically when actor annotated with @ModelActor
-//    init(modelContainer: ModelContainer) {
-//        let modelContext = ModelContext(modelContainer)
-//        self.modelExecutor = DefaultSerialModelExecutor(modelContext: modelContext)
-//        self.modelContainer = modelContainer
-//    }
-    
-    func persist(_ models: [User]) {
-        models.forEach{ context.insert($0) }
-        try? context.save()
-        print("Data persisted")
-    }
     
     func persistUsers(_ numUsers: Int) {
         var newUsers = [User]()
@@ -39,13 +24,10 @@ actor ThreadsafeBackgroundActor: Sendable { //ModelActor, Sendable {
         print("Data persisted")
     }
     
-    func fetchData(
-        predicate: Predicate<User>? = nil,
-        sortBy: [SortDescriptor<User>] = []
-    ) async throws -> [UsersViewModel] {
-        let fetchDescriptor = FetchDescriptor<User>(predicate: predicate, sortBy: sortBy)
+    func fetchData() async throws -> [UsersDTO] {
+        let fetchDescriptor = FetchDescriptor<User>(sortBy: [SortDescriptor(\User.name)])
         let users: [User] = try context.fetch(fetchDescriptor)
-        let userViewModels = users.map{UsersViewModel(id: $0.id, name: $0.name)}
+        let userViewModels = users.map{UsersDTO(id: $0.id, name: $0.name)}
         return userViewModels
     }
     

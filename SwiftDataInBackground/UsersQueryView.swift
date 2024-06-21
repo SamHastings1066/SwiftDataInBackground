@@ -27,11 +27,10 @@ final class UsersQueryViewModel: Sendable { // Must be Sendable to let the Swift
         self.modelContainer = modelContainer
     }
     
-    func backgroundFetch() async throws -> [UsersViewModel] {
+    func backgroundFetch() async throws -> [UsersDTO] {
         let backgroundActor = ThreadsafeBackgroundActor(modelContainer: modelContainer) // backgroundActor must be created within an async context off the main actor, or else its associated model context will be on the main actor and any work done will be done on the main thread.
         let start = Date()
-        let sortDescriptor = [SortDescriptor(\User.name)]
-        let result = try await backgroundActor.fetchData(sortBy: sortDescriptor)
+        let result = try await backgroundActor.fetchData()
         print("Background fetch takes \(Date().timeIntervalSince(start))")
         return result
     }
@@ -52,7 +51,7 @@ struct UsersQueryView: View {
     let modelContainer: ModelContainer
     @State var isCreatingDatabase = true
     @State var isFetchingUsers = false
-    @State private var users: [UsersViewModel] = []
+    @State private var users: [UsersDTO] = []
     var viewModel: UsersQueryViewModel
     
     
@@ -106,13 +105,13 @@ struct UsersQueryView: View {
         }
     }
     
-    private func mainThreadFetch() -> [UsersViewModel] {
+    private func mainThreadFetch() -> [UsersDTO] {
         let context = ModelContext(modelContainer)
         do {
             let start = Date()
             let result = try context.fetch(FetchDescriptor<User>(sortBy: [SortDescriptor(\User.name)]))
             print("Main thread fetch takes \(Date().timeIntervalSince(start))")
-            return result.map{UsersViewModel(id: $0.id, name: $0.name)}
+            return result.map{UsersDTO(id: $0.id, name: $0.name)}
         } catch {
             print(error)
             return []
