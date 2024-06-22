@@ -42,7 +42,7 @@ final class UsersQueryViewModel: Sendable { // Must be Sendable to let the Swift
             print("User models already exists")
             return
         }
-        await backgroundActor.persistUsers(10000)
+        await backgroundActor.persistUsers(50000)
     }
     
 }
@@ -67,7 +67,7 @@ struct UsersQueryView: View {
             } else {
                 Button("Background retrieval") {
                     isFetchingUsers = true
-                    Task(priority: .background) {
+                    Task() {
                         users = try await viewModel.backgroundFetch()
                         isFetchingUsers = false
                     }
@@ -99,7 +99,7 @@ struct UsersQueryView: View {
                 }
             }
         }
-        .task(priority: .background) {
+        .task() {
             await viewModel.createDatabase()
             isCreatingDatabase = false
         }

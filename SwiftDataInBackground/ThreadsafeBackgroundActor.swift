@@ -10,7 +10,7 @@ import SwiftData
 
 @available(iOS 17, *)
 @ModelActor
-actor ThreadsafeBackgroundActor: Sendable { //ModelActor, Sendable {
+actor ThreadsafeBackgroundActor: Sendable {
     
     private var context: ModelContext { modelExecutor.modelContext }
     
