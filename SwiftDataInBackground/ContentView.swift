@@ -78,7 +78,7 @@
 //    
 //    private func backgroundSerialFetch() {
 //        Task(priority: .background) {
-//            let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer)
+//            let backgroundActor = ThreadsafeBackgroundActor(modelContainer: modelContainer)
 //            do {
 //                let batchSize = 1000
 //                let totalCount = 10000
@@ -96,7 +96,7 @@
 //    private func backgroundBatchFetch() async throws -> [User] {
 //        // Batch size and total count
 //        let batchSize = 1000
-//        let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer)
+//        let backgroundActor = ThreadsafeBackgroundActor(modelContainer: modelContainer)
 //        let totalCount = 10000
 //        
 //        let start = Date()
@@ -120,7 +120,7 @@
 //    }
 //    
 //    private func backgroundFetch() async throws -> [User] {
-//                let backgroundActor = ThreadsafeBackgroundDatabaseActor(container: modelContainer)
+//        let backgroundActor = ThreadsafeBackgroundActor(modelContainer: modelContainer)
 //                let start = Date()
 //                let result = try await backgroundActor.fetchData() as [User]
 //                print("Background fetch takes \(Date().timeIntervalSince(start))")

@@ -27,7 +27,7 @@ final class UsersQueryViewModel: Sendable { // Must be Sendable to let the Swift
         self.modelContainer = modelContainer
     }
     
-    func backgroundFetch() async throws -> [UsersDTO] {
+    func backgroundFetch() async throws -> [UserDTO] {
         let backgroundActor = ThreadsafeBackgroundActor(modelContainer: modelContainer) // backgroundActor must be created within an async context off the main actor, or else its associated model context will be on the main actor and any work done will be done on the main thread.
         let start = Date()
         let result = try await backgroundActor.fetchData()
@@ -42,7 +42,7 @@ final class UsersQueryViewModel: Sendable { // Must be Sendable to let the Swift
             print("User models already exists")
             return
         }
-        await backgroundActor.persistUsers(50000)
+        await backgroundActor.persistUsers(10000)
     }
     
 }
@@ -51,7 +51,7 @@ struct UsersQueryView: View {
     let modelContainer: ModelContainer
     @State var isCreatingDatabase = true
     @State var isFetchingUsers = false
-    @State private var users: [UsersDTO] = []
+    @State private var users: [UserDTO] = []
     var viewModel: UsersQueryViewModel
     
     
@@ -105,13 +105,13 @@ struct UsersQueryView: View {
         }
     }
     
-    private func mainThreadFetch() -> [UsersDTO] {
+    private func mainThreadFetch() -> [UserDTO] {
         let context = ModelContext(modelContainer)
         do {
             let start = Date()
             let result = try context.fetch(FetchDescriptor<User>(sortBy: [SortDescriptor(\User.name)]))
             print("Main thread fetch takes \(Date().timeIntervalSince(start))")
-            return result.map{UsersDTO(id: $0.id, name: $0.name)}
+            return result.map{UserDTO(id: $0.id, name: $0.name)}
         } catch {
             print(error)
             return []

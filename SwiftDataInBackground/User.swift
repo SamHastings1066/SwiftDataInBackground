@@ -20,7 +20,7 @@ class User {
 }
 
 /// Creates User Data Transfer Objects
-final class UsersDTO: Sendable, Identifiable {
+final class UserDTO: Sendable, Identifiable {
     let id: UUID
     let name: String
     

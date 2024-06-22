@@ -24,10 +24,10 @@ actor ThreadsafeBackgroundActor: Sendable { //ModelActor, Sendable {
         print("Data persisted")
     }
     
-    func fetchData() async throws -> [UsersDTO] {
+    func fetchData() async throws -> [UserDTO] {
         let fetchDescriptor = FetchDescriptor<User>(sortBy: [SortDescriptor(\User.name)])
         let users: [User] = try context.fetch(fetchDescriptor)
-        let userViewModels = users.map{UsersDTO(id: $0.id, name: $0.name)}
+        let userViewModels = users.map{UserDTO(id: $0.id, name: $0.name)}
         return userViewModels
     }
     
