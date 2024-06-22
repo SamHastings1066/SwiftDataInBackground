@@ -79,10 +79,11 @@ struct UsersQueryView: View {
                 }
                 .buttonStyle(.bordered)
                 
-                Button("Check UI responsive") {
+                Button("Clear users") {
+                    users = []
                     print("Responsive!")
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.borderedProminent)
                 
                 if isFetchingUsers {
                     List {
