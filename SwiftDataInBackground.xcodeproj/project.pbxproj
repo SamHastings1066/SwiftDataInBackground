@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8456E4B62C2740A200426F3B /* usage.gif in Resources */ = {isa = PBXBuildFile; fileRef = 8456E4B52C2740A200426F3B /* usage.gif */; };
+		8456E4B82C27420300426F3B /* instruments_readout.png in Resources */ = {isa = PBXBuildFile; fileRef = 8456E4B72C27420300426F3B /* instruments_readout.png */; };
 		847362432C1A41470050C9B2 /* SwiftDataInBackgroundApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847362422C1A41470050C9B2 /* SwiftDataInBackgroundApp.swift */; };
 		847362452C1A41470050C9B2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847362442C1A41470050C9B2 /* ContentView.swift */; };
 		847362472C1A41480050C9B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 847362462C1A41480050C9B2 /* Assets.xcassets */; };
@@ -18,6 +20,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8456E4B42C27406400426F3B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		8456E4B52C2740A200426F3B /* usage.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = usage.gif; sourceTree = "<group>"; };
+		8456E4B72C27420300426F3B /* instruments_readout.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = instruments_readout.png; sourceTree = "<group>"; };
 		8473623F2C1A41470050C9B2 /* SwiftDataInBackground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftDataInBackground.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		847362422C1A41470050C9B2 /* SwiftDataInBackgroundApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataInBackgroundApp.swift; sourceTree = "<group>"; };
 		847362442C1A41470050C9B2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -43,6 +48,9 @@
 		847362362C1A41470050C9B2 = {
 			isa = PBXGroup;
 			children = (
+				8456E4B42C27406400426F3B /* README.md */,
+				8456E4B72C27420300426F3B /* instruments_readout.png */,
+				8456E4B52C2740A200426F3B /* usage.gif */,
 				847362412C1A41470050C9B2 /* SwiftDataInBackground */,
 				847362402C1A41470050C9B2 /* Products */,
 			);
@@ -137,6 +145,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8456E4B62C2740A200426F3B /* usage.gif in Resources */,
+				8456E4B82C27420300426F3B /* instruments_readout.png in Resources */,
 				8473624A2C1A41480050C9B2 /* Preview Assets.xcassets in Resources */,
 				847362472C1A41480050C9B2 /* Assets.xcassets in Resources */,
 			);
