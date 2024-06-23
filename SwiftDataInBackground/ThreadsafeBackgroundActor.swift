@@ -27,8 +27,8 @@ actor ThreadsafeBackgroundActor: Sendable {
     func fetchData() async throws -> [UserDTO] {
         let fetchDescriptor = FetchDescriptor<User>(sortBy: [SortDescriptor(\User.name)])
         let users: [User] = try context.fetch(fetchDescriptor)
-        let userViewModels = users.map{UserDTO(id: $0.id, name: $0.name)}
-        return userViewModels
+        let userDTOs = users.map{UserDTO(id: $0.id, name: $0.name)}
+        return userDTOs
     }
     
     func fetchCount() async -> Int {
