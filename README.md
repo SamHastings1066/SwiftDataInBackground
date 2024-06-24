@@ -1,7 +1,7 @@
 # SwiftDataInBackground
 ## Overview
 
-SwiftDataInBackground is a demo app showing how to perform SwiftData fetches on a background thread using a ModelActor without triggering any concurrency warnings in the Swift compiler. The Medium article explaining the motivation and details of the implementation can be found here. !!!INSERT LINK!!!
+SwiftDataInBackground is a demo app showing how to perform SwiftData fetches on a background thread using a ModelActor without triggering any concurrency warnings in the Swift compiler. The [Medium article](https://medium.com/@samhastingsis/92c05cba73bf) accompanying this repo explains the motivation and details of the implementation.
 
 The GIF below shows the app being used:
 
